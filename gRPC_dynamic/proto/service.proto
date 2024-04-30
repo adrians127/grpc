@@ -1,0 +1,17 @@
+syntax = "proto3";
+package agh.student.MyService;
+option java_multiple_files = true;
+
+message ServiceRequest {
+    string title = 1;
+    string description = 2;
+    float review = 3;
+}
+
+message ServiceResponse {
+    string data = 1;
+}
+
+service MyService {
+    rpc execute(ServiceRequest) returns (ServiceResponse);
+}
