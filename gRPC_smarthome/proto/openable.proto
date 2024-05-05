@@ -6,6 +6,6 @@ option java_package = "gen.grpc";
 package gen.grpc;
 
 enum OpenClosedState {
-  OPEN = 0;
-  CLOSED = 1;
+  CLOSED = 0;
+  OPEN = 1;
 }

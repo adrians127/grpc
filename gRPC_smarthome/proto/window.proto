@@ -41,10 +41,15 @@ message WindowRequest {
 message WindowListResponse {
   repeated Window windows = 1;
 }
+message ChangeBlindStateRequest {
+  int64 id = 1;
+  bool newState = 2;
+}
 
 service WindowService {
   rpc GetWindowState(WindowRequest) returns (Window);
   rpc OpenWindow(WindowRequest) returns (Empty);
   rpc CloseWindow(WindowRequest) returns (Empty);
   rpc ListWindows(Empty) returns (WindowListResponse);
+  rpc ChangeBlindState(ChangeBlindStateRequest) returns (Empty);
 }
