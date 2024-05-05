@@ -1,0 +1,57 @@
+syntax = "proto3";
+import "house.proto";
+
+option java_multiple_files = true;
+option java_package = "gen.grpc";
+
+package gen.grpc;
+
+enum LightState {
+    OFF = 0;
+    ON = 1;
+}
+message NormalLight {
+    int64 id = 1;
+    Room room = 2;
+    LightState state = 3;
+}
+
+enum RGBColour {
+    RED = 0;
+    GREEN = 1;
+    BLUE = 2;
+}
+
+message RGBLight {
+    int64 id = 1;
+    Room room = 2;
+    RGBColour colour = 3;
+    LightState state = 4;
+}
+
+message Light {
+    oneof light {
+        NormalLight normal = 1;
+        RGBLight rgb = 2;
+    }
+}
+
+message LightRequest {
+    int64 id = 1;
+}
+message RGBLightRequest {
+    int64 id = 1;
+    RGBColour colour = 2;
+}
+
+message ListLightsResponse {
+    repeated Light lights = 1;
+}
+
+service LightService {
+    rpc GetLightState(LightRequest) returns (Light);
+    rpc TurnOnLight(LightRequest) returns (Empty);
+    rpc TurnOffLight(LightRequest) returns (Empty);
+    rpc ListLights(Empty) returns (ListLightsResponse);
+    rpc ChangeColour(RGBLightRequest) returns (Empty);
+}

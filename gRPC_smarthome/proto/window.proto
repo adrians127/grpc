@@ -1,0 +1,50 @@
+syntax = "proto3";
+import "house.proto";
+import "openable.proto";
+
+option java_multiple_files = true;
+option java_package = "gen.grpc";
+
+package gen.grpc;
+
+message StandardWindow {
+  int64 id = 1;
+  Room room = 2;
+  OpenClosedState state = 3;
+}
+
+message RoofWindow {
+  int64 id = 1;
+  Room room = 2;
+  OpenClosedState state = 3;
+  bool isBlindDown = 4; // Czy roleta jest opuszczona
+}
+
+message BalconyWindow {
+  int64 id = 1;
+  Room room = 2;
+  OpenClosedState state = 3;
+  int32 peopleOnBalcony = 4; // Ile osob jest na balkonie (jakis czujnik)
+}
+
+message Window {
+  oneof window_type {
+    StandardWindow standard = 1;
+    RoofWindow roof = 2;
+    BalconyWindow balcony = 3;
+  }
+}
+
+message WindowRequest {
+  int64 id = 1;
+}
+message WindowListResponse {
+  repeated Window windows = 1;
+}
+
+service WindowService {
+  rpc GetWindowState(WindowRequest) returns (Window);
+  rpc OpenWindow(WindowRequest) returns (Empty);
+  rpc CloseWindow(WindowRequest) returns (Empty);
+  rpc ListWindows(Empty) returns (WindowListResponse);
+}

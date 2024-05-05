@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gen.grpc";
+
+package gen.grpc;
+
+enum Room {
+  DEFAULT = 0;
+  KITCHEN = 1;
+  LIVING_ROOM = 2;
+  BEDROOM = 3;
+  BATHROOM = 4;
+}
+
+message Empty {
+
+}
+
+message RoomRequest {
+  Room room = 1;
+}
+message RoomResponse {
+  repeated Room rooms = 1;
+}

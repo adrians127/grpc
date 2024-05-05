@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gen.grpc";
+
+package gen.grpc;
+
+enum OpenClosedState {
+  OPEN = 0;
+  CLOSED = 1;
+}
