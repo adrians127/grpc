@@ -2,16 +2,25 @@ syntax = "proto3";
 package agh.student.MyService;
 option java_multiple_files = true;
 
-message ServiceRequest {
+message Book {
     string title = 1;
     string description = 2;
     float review = 3;
+}
+message BookList {
+    repeated Book books = 1;
+}
+message BookRequest {
+    string title = 1;
 }
 
 message ServiceResponse {
     string data = 1;
 }
+message Empty {}
 
 service MyService {
-    rpc execute(ServiceRequest) returns (ServiceResponse);
+    rpc GetBooks(BookRequest) returns (BookList) {}
+    rpc AddBook(Book) returns (ServiceResponse) {}
+    rpc getAllBooks(Empty) returns (BookList) {}
 }

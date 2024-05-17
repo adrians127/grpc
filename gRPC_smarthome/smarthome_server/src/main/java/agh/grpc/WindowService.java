@@ -1,6 +1,7 @@
 package agh.grpc;
 
 import gen.grpc.BalconyWindow;
+import gen.grpc.ChangeBlindStateRequest;
 import gen.grpc.Empty;
 import gen.grpc.OpenClosedState;
 import gen.grpc.RoofWindow;
@@ -144,6 +145,35 @@ public class WindowService extends WindowServiceGrpc.WindowServiceImplBase {
         logger.info("Received request to list all windows");
         var windowList = WindowListResponse.newBuilder().addAllWindows(windows.values());
         responseObserver.onNext(windowList.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void changeBlindState(ChangeBlindStateRequest request, StreamObserver<Empty> responseObserver) {
+        logger.info("Received request to change blind state for window ID: " + request.getId());
+        var window = windows.get(request.getId());
+        if (window == null) {
+            responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+            return;
+        }
+        switch (window.getWindowTypeCase()) {
+            case ROOF -> {
+                var roofWindow = window.getRoof();
+                windows.put(request.getId(), Window.newBuilder()
+                        .setRoof(
+                                RoofWindow.newBuilder()
+                                        .setId(request.getId())
+                                        .setRoom(roofWindow.getRoom())
+                                        .setState(roofWindow.getState())
+                                        .setIsBlindDown(request.getNewState())
+                                        .build()).build());
+            }
+            default -> {
+                responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Not Roof window").asRuntimeException());
+                return;
+            }
+        }
+        responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
     }
 }

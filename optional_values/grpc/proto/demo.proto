@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gen.grpc";
+
+package gen.grpc;
+
+enum DemoEnum {
+    UNKNOWN = 0;
+    FOO = 1;
+    BAR = 2;
+}
+
+message IntMessage {
+    int32 arg1 = 1;
+    int32 arg2 = 2;
+}
+
+message StringMessage {
+    string arg1 = 1;
+    string arg2 = 2;
+}
+
+message EnumMessage {
+    DemoEnum arg1 = 1;
+    DemoEnum arg2 = 2;
+}
+
+message Empty {
+
+}
+
+service DemoService {
+    rpc IntMethod(IntMessage) returns (Empty) {}
+    rpc StringMethod(StringMessage) returns (Empty) {}
+    rpc EnumMethod(EnumMessage) returns (Empty) {}
+}

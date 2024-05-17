@@ -70,13 +70,14 @@ public class DoorService extends gen.grpc.DoorServiceGrpc.DoorServiceImplBase {
             responseObserver.onError(io.grpc.Status.NOT_FOUND.asRuntimeException());
             return;
         }
+        var newDoor = Door.newBuilder()
+                .setId(door.getId())
+                .setRoom(door.getRoom())
+                .setState(OpenClosedState.OPEN)
+                .build();
         doors.put(
                 request.getId(),
-                Door.newBuilder()
-                        .setId(door.getId())
-                        .setRoom(door.getRoom())
-                        .setState(OpenClosedState.OPEN)
-                        .build()
+                newDoor
         );
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
@@ -105,6 +106,7 @@ public class DoorService extends gen.grpc.DoorServiceGrpc.DoorServiceImplBase {
     @Override
     public void listDoors(Empty request, StreamObserver<ListDoorsResponse> responseObserver) {
         logger.info("Received request to list doors");
+        System.out.println(doors.values());
         var response = ListDoorsResponse.newBuilder().addAllDoors(doors.values()).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();

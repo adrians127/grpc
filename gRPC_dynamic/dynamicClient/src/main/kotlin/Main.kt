@@ -46,24 +46,54 @@ fun main() {
         }
     }).onNext(request)
 
-    getOrder()
-    // Wait for the asynchronous call to complete
+    getBook()
+    getAllBooks()
+    addBook()
+    getAllBooks()
     if (!finishLatch.await(1, TimeUnit.MINUTES)) {
         println("serverReflectionInfo can not finish within 1 minute")
     }
     channel.shutdownNow()
 }
-fun getOrder(){
-    val file = File("src/main/resources/getOrder.json")
+fun getBook(){
     val getOrderCommand = listOf(
         "grpcurl",
         "-plaintext",
+        "-d", "{\"title\": \"Harry Potter\"}", // empty request
         "localhost:9090",
-        "agh.student.MyService.MyService/execute"
+        "agh.student.MyService.MyService/GetBooks"
     )
     val getOrderProcess = ProcessBuilder(getOrderCommand)
         .redirectErrorStream(true)
         .start()
     val getOrderOutput = InputStreamReader(getOrderProcess.inputStream).readText()
     println(getOrderOutput)
+}
+fun getAllBooks() {
+    val getOrderCommand = listOf(
+        "grpcurl",
+        "-plaintext",
+        "localhost:9090",
+        "agh.student.MyService.MyService/getAllBooks"
+    )
+    val getOrderProcess = ProcessBuilder(getOrderCommand)
+        .redirectErrorStream(true)
+        .start()
+    val getOrderOutput = InputStreamReader(getOrderProcess.inputStream).readText()
+    println(getOrderOutput)
+}
+
+fun addBook() {
+    val addBookCommand = listOf(
+        "grpcurl",
+        "-plaintext",
+        "-d", "{\"title\": \"New Book\", \"description\": \"This is a new book\", \"review\": 4.5}",
+        "localhost:9090",
+        "agh.student.MyService.MyService/AddBook"
+    )
+    val addBookProcess = ProcessBuilder(addBookCommand)
+        .redirectErrorStream(true)
+        .start()
+    val addBookOutput = InputStreamReader(addBookProcess.inputStream).readText()
+    println(addBookOutput)
 }

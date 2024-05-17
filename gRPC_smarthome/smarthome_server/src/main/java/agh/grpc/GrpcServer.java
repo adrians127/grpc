@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class GrpcServer {
-    private final int PORT = 9090;
+    private final int PORT;
     private final Logger logger = Logger.getLogger(GrpcServer.class.getName());
+
+    public GrpcServer(int PORT) {
+        this.PORT = PORT;
+    }
+
     public void start() {
         try {
             io.grpc.Server server = io.grpc.ServerBuilder.forPort(PORT)
                     .addService(new LightService())
+                    .addService(new DoorService())
                     .addService(new WindowService())
                     .build()
                     .start();
